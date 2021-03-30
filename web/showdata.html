@@ -1,0 +1,301 @@
+<!DOCtype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title> 后台数据展示页面 </title>
+    <style>
+    body{
+        height: 700px;
+        margin: auto;
+        text-align: center;
+        background-image: url("/image/ken.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+    #app{
+        border: red 2px solid;
+        margin: 0;
+        height: 75%;
+        text-align: center;
+        display: flex;
+        justify-content: space-around;
+    }
+    img{
+        width: 220px;
+        height: 120px;
+        margin: 0 auto;
+    }
+    .message{
+        text-align: center;
+        width: 350px; 
+        margin: 0 auto;
+    }
+    .row{
+        display: flex; 
+        justify-content: space-around;
+    }
+    .message span{
+        /* border:  2px solid; */
+        width: 175px;
+        text-align: left;
+        margin: 6px;
+        background-color: rgb(253, 250, 245,0.5);
+    }
+    a:hover{
+        cursor: pointer;
+        background-color:white;
+        opacity:0.7;
+        
+    }
+    .middle{
+        margin:0 auto;
+        height: 100%;
+        width: 30%;
+        border-top: black 2px solid;
+        border-bottom: black 2px solid;
+    }
+    .left{
+        width: 30%;
+        height: 100%;
+        overflow:auto;
+        line-height: 20px;
+        border: 2px solid white;
+        background: rgba(243, 169, 73, 0.3);
+    }
+    .left::-webkit-scrollbar {
+        width: 5px;
+    }
+    /* 滚动条滑块 */
+    .left::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background:#6d7f7a!important;
+    }
+    .left::-webkit-scrollbar-track {
+        border-radius:10px;
+    }
+    #log li{
+        margin: 2px;
+        opacity: 0.8;
+        list-style: none;
+        text-align: left;
+        background:  rgba(243, 169, 73, 0.6);
+    }
+    .right{
+        width: 30%;
+        height: 100%;
+        overflow:auto;
+        line-height: 20px;
+        border: 2px solid white;
+        background: rgba(243, 169, 73, 0.3);
+    }
+    .right li{
+        margin: 2px;
+        opacity: 0.8;
+        list-style: none;
+        text-align: left;
+        background:  rgba(243, 169, 73, 0.6);
+    }
+    #hour{
+        color: rgb(231, 222, 222)
+    }
+    #name{
+        color: #005AB5;
+    }
+    .button {
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+    </style>
+    </head>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <body>
+    <div id="app">
+        <div class="left" id="log">
+            <li v-for="(item,index) in userdata.memorys"
+            :key="index"
+            ><span id="hour">[{{userdata.name}}]-</span><span id="name">(记录{{index}}): </span> {{ item }}</li>
+        </div>
+        <div class="middle">
+            <div id="photo">
+                <img src="image/timg.jpg">
+                <p style="color:white">{{ userdata.name }}</p>
+            </div>
+            <div class="message">
+                <div class="row">
+                <span>姓名 : {{ userdata.name }}</span> <span>体重: {{ userdata.weight }} kg</span>
+                </div>
+                <div class="row">
+                <span>体力 : {{ Number(userdata.MaxStrength*0.8).toFixed(4) }}</span> <span>精力: {{ Number(userdata.MaxPower*0.8).toFixed(4) }}</span>
+                </div>
+                <div class="row">
+                <span>剑意值 : {{ userdata.swords }}</span> <span>冥想值: {{ Number((userdata.MaxPower*0.8-1)*100000).toFixed(0) }} m</span>
+                </div>
+                <div class="row">
+                    <span>心理学 : {{ userdata.minds }} h</span> <span>编程学: {{ userdata.programs }} h</span>
+                </div>
+                <div class="row">
+                    <span>压力 : {{ Number(userdata.pressure).toFixed(2) }} </span> <span>情绪: {{ userdata.emotion }} </span>
+                </div>
+            </div>
+            <div style="margin: 10px;">
+                <span id="day" style="color:white"> 模拟周期 {{ counts }} 天 </span><br/>
+                <button @click="updata"> 模拟运行 </button>
+                <button @click="count"> 天数++ </button>
+                <button @click="count1"> 天数-- </button>
+                <button v-show="issave" @click="save"> 存档开 </button>
+                <button v-show="!issave" @click="save"> 存档关 </button>
+                <button @click="storage"> 缓存数据 </button>
+            </div>
+            <div><a href="/日程表.html">更改日程</a></div>
+        </div>
+        <div class="right">
+            <div v-show="wish">
+                <li v-for="(item,index) in showfuture" v-show="!talk">
+                    <span v-show="j>=index"><span id="hour"> -昨天的{{ userdata.name }}-
+                    </span><span id="name">(记录{{index}}-{{j}}): </span> {{item}}</span>
+                </li>
+                <div id="name" v-show=" showfuture.length==j && !talk"> 时空连接已断开 </div>
+
+                <li v-for="(item,index) in showpast" v-show="talk">
+                    <span v-show="index<i"> <span id="hour"> -未来的{{ userdata.name }}-
+                    </span><span id="name">(记录{{index}}-{{i}}): </span> {{item}}</span>
+                </li>
+                <div id="name" v-show=" !link && talk"> 时空连接已断开 </div>
+
+                <div v-show="!talk && showfuture.length!=j">
+                    <input  type="text" v-model="chats" />
+                    <a @click="post">发往过去</a>
+                </div>
+
+                <div v-show="talk && link" >
+                    <button @click="link=0">断开连接</button>
+                    <input type="text" v-model="chats" />
+                    <a @click="post" v-show="talk">发往未来</a> 
+                </div>
+                <a @click="talk=!talk"> 切换时空 </a>
+                <button @click=" over "> 时空曲缩结束 </button>
+            </div>
+            <div class="button" @click="wish=!wish"> 回应期望与新目标 </div>
+        </div>
+    </div>
+    </body>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+    const updatas=()=>{
+        if(ws)ws.close()
+        var ws = new WebSocket(`ws://127.0.0.1:3000`)
+        ws.onopen = () => {
+            console.log('WebSocket onopen')
+            ws.send(`请求更新数据`)
+        }
+        ws.onmessage = e => {
+            if(e){console.log(`获取更新数据`)}
+            var userdata=eval("("+e.data+")")
+            showdata.innerHTML=userdata.name+`的人物模型`    
+            ws.close()
+        }
+    }
+    var app=new Vue({
+        el: '#app',
+        data:{
+            wish:0,
+            link:1,
+            talk:0,
+            i:0,
+            j:0,
+            issave:false,
+            counts:1,
+            userdata:{name:`未模拟`,weight:45,trength:1,MaxStrength:1.25,MaxPower:1.25,swords:0,},
+            message:[{past:[],future:[]}],
+            chats:'',
+            showpast:[],
+            showfuture:[],
+            chat:{past:[],future:[]},
+            isover:0,
+        },methods:{
+            getdata(){
+                if(!localStorage.data){ 
+                    this.updata()
+                    return console.log(`无缓存数据`) 
+                }
+                var data=JSON.parse(localStorage.getItem(`data`))
+                this.userdata=data
+                this.message=data.memoryl
+                this.crosstime()
+                console.log(`缓存数据:`+data.name)
+            },
+            count(){
+                this.counts+=1;
+                if(this.counts>30)this.counts=1
+            },
+            count1(){
+                this.counts-=1;
+                if(this.counts<0)this.counts=30
+            },
+            save(){
+                this.issave=!this.issave
+            },
+            updata(){
+                $.get(`/api/showdata`,{day:this.counts,issave:this.issave,memory:this.message},(data,status)=>{  //阿贾克斯 轮询
+                this.userdata=data.second
+                this.message=data.second.memoryl
+                this.crosstime()
+                console.log(`用户数据:`+data.first+ "\n" + data.second.name + `\n 请求状态:`+status)
+                })
+                this.$nextTick(() => {
+                var log=document.getElementById('log')
+                log.scrollTop=log.scrollHeight; // 滚动条处于底部
+                }) 
+            },
+            post(){
+                if(this.talk){
+                    this.i+=1
+                    this.chat.future.push(this.chats)
+                }else if(!this.talk){
+                    this.j+=1
+                    this.chat.past.push(this.chats)
+                }
+                this.chats=''
+                //console.log(this.chat.past,this.chat.future)
+            },
+            postdata(){
+                $.post("/api/postdata",{message:this.message},function(result){
+                    console.log(result);
+                 })
+            },
+            over(){
+                if(this.isover){ return console.log(`时空扭曲关闭`) }
+                this.isover=1
+                this.message.push(this.chat)
+                console.log(`数据存储`)
+                this.postdata()
+            },
+            crosstime(){
+                var talks=this.message
+                var past=talks[talks.length-1].past
+                this.showpast.push(...past)
+                var tu=talks[talks.length-1].future
+                this.showfuture.push(...tu)
+            },
+            storage(){
+                localStorage.setItem(`data`,JSON.stringify( this.userdata ))
+            },
+        },
+        beforeMount(){
+        },
+        mounted(){
+            this.getdata()
+        },
+        updated(){
+        }
+    })
+    </script>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>用户登录</title>
+<style type="text/css">
+#box1{
+    font-size:medium;
+    position: fixed;
+    top: 10%;
+    left: 34%;
+    height: 30px;
+    width: 150px;
+    line-height: 30px;
+}
+body {
+    margin:0;
+    background-repeat:no-repeat;/*图片适应窗口大小，这里设置的是不进行平铺*/
+    background-attachment: fixed;/*图片相对于浏览器固定,这里设置背景图片固定，不随内容滚动*/
+    background-origin:border-box;/*从边框区域显示*/
+    background-size:cover;/*指定图片大小，此时会保持图像的纵横比并将图像缩放成将完全覆盖背景定位区域的最小大小*/
+}
+video {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -99;
+}
+#submit{color:white;background-color:rgb(170, 100, 20);}
+input:hover{
+    background-color:rgb(204, 202, 202);
+    opacity:0.8
+}
+a:hover{
+    background-color:white;
+    opacity:0.7;
+}
+*{
+-moz-user-select: none;
+-o-user-select:none;
+-khtml-user-select:none;
+-webkit-user-select:none;
+-ms-user-select:none;
+user-select:none;
+}
+</style>
+</head>
+<body >
+    <video autoplay loop id="video">
+        <source  src="image/无鞘之刃-亚索-登录界面.mp4" style="width: 100%;" type="video/mp4">
+    </video>
+    <script>
+        const plays=()=>{
+            console.log(`动画运行`)
+            var video=document.getElementById(`video`)
+            video.play()
+        }
+    </script>
+  
+    <form method="POST" action="/api/login">
+        <div id="box1">
+            <p style="text-align: center;font-size:38px;">登录</p>
+            <label for="username">用户名:</label>
+            <input type="text" name="username" id="username" placeholder="昵称" onchange="plays()"/><br>
+            <label for="pass">密码:</label>
+            <input type="password" name="password" id="pass" placeholder="输入密码"/><br>
+            <label for="regist">没有账号？<a id="regist" href="注册.html" style="color:rgb(170, 100, 20);">注册</a></label>
+            <div id="box2">
+                <input type="submit" name="submit" id="submit" value="登陆">
+                <input type="reset"  value="清除">
+            </div>
+        </div>
+    </form>
+</body>
+</html>

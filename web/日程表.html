@@ -1,0 +1,323 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="ut-8"/>
+<title> 日程表 </title>
+<style>
+input{
+    text-align: center;
+}
+[type="text"]{
+    width: 80px;
+}
+#ground{
+    transform:scaleX(-1);
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -99;
+    background-image:url(image/4.jpg);
+    background-repeat:no-repeat;
+    background-size:cover;
+}
+#agenda{
+    width: 300px;
+    margin:50px auto;
+    text-align:center;
+    position: relative;
+    top: 100px;
+    background-color:rgba(255,255,255,0.5)
+}
+#table{
+    position: relative;
+    margin: auto;
+    margin-bottom: 10px;
+    text-align:center;
+}
+#btn{
+    margin: 10px auto;
+}
+h3,h4{
+    margin: 0;
+    margin-top: 10px;
+} 
+#user{
+    position: relative;
+    top: -20px;
+}
+a:link{  
+    text-decoration: none;
+    font-size: 20px;
+    color: black;
+    position: fixed;
+    top: 100px;
+    right: 330px;
+}
+a:visited {
+    color: white;
+}
+a:hover{
+    cursor: pointer;
+    font-size: 22px;
+    color: white;
+}
+a:active{
+    font-size: 24px;
+}
+
+</style>
+</head>
+<body >
+<div id="ground">
+</div>
+<form method="POST" action="/api/detail">
+<fieldset id="agenda" >
+    <legend><h2>日程表</h2></legend>
+    <div id="setted">
+        <table id="table"  border="1" cellspacing="0" cellpadding="0" style="text-align: center;" ref="tables">
+            <tr><th> 活动 </th> <th> 起始时间 </th>  <th> 结束时间 </th> <th> 删除 </th> </tr>
+            <tr>
+                <td>  <select name="actives">
+                    <option value="sleep"> 睡觉 </option>
+                    <option value="exercise"> 锻炼 </option>
+                    <option value="amuse"> 娱乐 </option>
+                    <option value="learn" selected> 学习/工作 </option>
+                    <option value="meditation"> 冥想 </option>
+                    <option value="rest"> 休息 </option>
+                    <option value="eat"> 就餐 </option>
+                </select></td> 
+                <td><input type="time" value=07:00 name="start" /></td> 
+                <td> <input type="time" value="12:00" name="end"/></td> 
+                <td><a onclick="alert(`至少保有2项日程`)">--</a></td> 
+            </tr>
+            <tr>
+                <td>  <select name="actives">
+                    <option value="sleep"> 睡觉 </option>
+                    <option value="exercise"> 锻炼 </option>
+                    <option value="amuse" selected> 娱乐 </option>
+                    <option value="learn" > 学习/工作 </option>
+                    <option value="meditation"> 冥想 </option>
+                    <option value="rest"> 休息 </option>
+                    <option value="eat"> 就餐 </option>
+                </select></td> <td><input type="time" value=19:00 name="start" /></td> 
+                <td> <input type="time" value="23:00" name="end"/></td> 
+                <td><a onclick="alert(`至少保有2项日程`)">--</a></td> 
+            </tr>
+        </table>
+        <div id="qst" style="text-align:left;">
+            <label for="eat">三餐进食量:</label>
+            <select name="eat" id="eat">
+                <option value=0> 绝食 </option>
+                <option value=1> 减肥餐 </option>
+                <option value=2> 较少(6分饱) </option>
+                <option value=3 selected> 正常(8分饱) </option>
+                <option value=4> 较多(10分饱) </option>
+                <option value=5> 大吃大喝 </option>
+            </select><br>
+            <label for="excise">运动量:</label>
+            <select name="excise" id="excise">
+                <option value=0 selected> 不运动 </option>
+                <option value=1>稍微运动(每周2-4次/0.5h)</option>
+                <option value=2>中度运动(每周4-6次/1h)</option>
+                <option value=3>积极运动(每周6-7次/2h)</option>
+                <option value=4>专业运动(2倍运动量/4h)</option>
+            </select><br>
+        </div>
+        <div id="btn">
+            <input type="button" value="添加" onclick="add()"/>
+            <input type="reset" value="清空"/>
+            <input type="button" value="自定义" onclick="addset(),show()"/>
+            <input type="submit" value="提交" />
+            <input type="button" value="日程缓存" onclick="save()"/>
+        </div>
+    </div>
+    <div id="user" style="display: none;">
+    <fieldset>
+        <legend><h3>自定义</h3></legend>
+        <label for="ename">事件代号: </label>
+        <input id="ename" name="ename" type="text"  onkeyup="value=value.replace(/[^a-zA-Z]/g,'')" placeholder=" losePower "/></br>
+        <label for="attr" onclick="olds()">属性:</label>
+        <select name="attr" id="attr" onchange="sets()" dbclick="olds()">
+            <option value="height"> 身高  </option>
+            <option value="weight"> 体重 </option>
+            <option value="MaxStrength"> 体力 </option>
+            <option value="MaxPower"> 精力 </option>
+            <option value="emotion"> 情绪值 </option>
+            <option value=" MaxPressure"> 压力值 </option>
+            <option value="swords"> 剑意值 </option>
+            <option value="minds"> 心理学知识 </option>
+            <option value="programs"> 编程知识 </option>
+            <option value="set" > 自定义 </option>
+        </select><br/> 
+        <fieldset id="setattr" style="display: none;">
+            <legend><h4>定义属性</h4></legend>
+            <input  type="text" placeholder=" 定义属性名 "/>
+            <input id="setattrs" name="attr" type="text" onkeyup="value=value.replace(/[^a-zA-Z]/g,'')"  placeholder=" 定义代号 " disabled/>
+        </fieldset>
+        <label for="nm">影响属性:</label>
+        <input name="nm" type="number" placeholder="0.01:1%影响" max="10" min="0.0001" step="0.0001"/>
+        <div onclick="setover()"> 设定完成 </div>
+    </fieldset>
+    </div>
+</fieldset>
+</form>
+<a href="/showdata.html"> 直接去结算页面 </a>
+</body>
+
+<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+<script>
+var table=document.getElementById("table")
+if(typeof localStorage.Data == 'undefined') {console.log(`无存储`)}
+if(localStorage.Data){
+    var x=localStorage.getItem('Data')
+    var qst=localStorage.getItem('qst')
+    eat.value=qst[0]
+    excise.value=qst[2]
+    var values=eval(localStorage.getItem('value'))
+    console.log("取得缓存日程")
+    table.innerHTML=x
+    var childs=table.childNodes[1].childNodes
+    var num=0
+    for(let i=1;i<childs.length;i++){
+        if(childs[i].nodeType == '3' && childs[i].nodeName == '#text' && !/\S/.test(childs[i].nodeValue)){continue}
+        var e=childs[i].childNodes
+        for(let j=0;j<e.length;j++ ){
+            if(e[j].nodeType == '3' && e[j].nodeName == '#text' || e[j].firstChild.innerHTML=='--' ){continue}
+            var s=e[j].childNodes
+            for(let z=0;z<s.length;z++ ){
+                if(s[z].nodeType == '3' && s[z].nodeName == '#text'){continue}
+                s[z].value=values[num]
+                num++
+            }
+        }
+    }
+}
+var section=`<option value="sleep"> 睡觉 </option>
+            <option value="exercise"> 锻炼 </option>
+            <option value="amuse"> 娱乐 </option>
+            <option value="mind"> 学习心理学 </option>
+            <option value="program"> 学习编程 </option>
+            <option value="sword"> 剑道 </option>
+            <option value="meditation"> 冥想 </option>
+            <option value="rest"> 休息 </option>
+            <option value="losePower"> 走丹 </option>
+            <option value="eat"> 就餐 </option>`
+$.get(`api/special`,(data,status)=>{
+    if(!data){return console.log(`未连接`)}
+    let agenda=data.agenda
+    let special=agenda[1] //所有日程
+    for(let i in special) {
+        console.log(`添加定义日程--${i}`)
+        if(i==`__proto__`){return}
+        section+=`
+        <option value=${i}> ${agenda[i].des} </option>`
+    }
+})
+var user=document.getElementById(`user`)
+var setattr=document.getElementById(`setattr`)
+var attr=document.getElementById(`attr`)
+const sets=()=>{
+    if(attr.options[attr.selectedIndex].value=="set") {
+        console.log(`展示属性自定义`); 
+        setattrs.disabled=1
+        setattr.style.display="block";
+    }
+    else{setattr.style.display="none"}
+}
+const olds=()=>{
+    attr.disabled=0
+}
+const setover=()=>{
+    console.log(`关闭自定义`);
+    setted.style.display="block"
+    user.style.display="none"
+}
+const show=()=>{
+    console.log(`展示自定义`)
+    var setted=document.getElementById(`setted`)
+    setted.style.display="none"
+    user.style.display="block"
+}
+const addset=()=>{
+    console.log(`添加特殊日程`)
+    var tr=document.createElement("tr")
+    var td1=document.createElement("td")
+    var td2=document.createElement("td")
+    var td3=document.createElement("td")
+    var td4=document.createElement("td")
+    var a=document.createElement(`a`)
+    a.innerHTML=`--`
+    a.setAttribute(`onclick`,`delet(this)`)
+    a.appendChild(td4)
+    td1.innerHTML=`<input type="text" name="userset" id="userset" />`
+    td2.innerHTML=`<input type="time" name="us"/>`
+    td3.innerHTML=`<input type="time" name="ue"/>`
+    var a=document.createElement("a");
+    a.setAttribute("onclick","delet(this)");
+    a.innerHTML="--";
+    td4.appendChild(a);
+    tr.appendChild(td1)
+    tr.appendChild(td2)
+    tr.appendChild(td3)
+    tr.appendChild(td4)
+    table.lastChild.appendChild(tr)
+}
+const add=()=>{
+    console.log(`添加日程`)
+    var tr=document.createElement("tr");
+    var td1=document.createElement("td");
+    var td2=document.createElement("td");
+    var td3=document.createElement("td");
+    var td4=document.createElement("td");
+    td1.innerHTML=`<td>
+        <select name="actives">
+            ${section}
+        </select> </td>`
+    td2.innerHTML=`<input type="time" name="start"/> `
+    td3.innerHTML=`<input type="time" name="end"/>`
+    var a=document.createElement("a");
+    a.setAttribute("onclick","delet(this)");
+    a.innerHTML="--";
+    td4.appendChild(a);
+    tr.appendChild(td1);
+    tr.appendChild(td2);
+    tr.appendChild(td3);
+    tr.appendChild(td4);
+    table.lastChild.appendChild(tr);
+}
+const delet=(t)=>{
+    var parent=t.parentNode.parentNode.parentNode
+    parent.removeChild(t.parentNode.parentNode)
+}
+const save=()=>{
+    var x=table.innerHTML
+    var childs=table.childNodes[1].childNodes
+    var values=[]
+    for(let i=1;i<childs.length;i++){
+        if(childs[i].nodeType == '3' && childs[i].nodeName == '#text' && !/\S/.test(childs[i].nodeValue)){continue}
+        var e=childs[i].childNodes
+        for(let j=0;j<e.length;j++ ){
+            if(e[j].nodeType == '3' && e[j].nodeName == '#text' || e[j].firstChild.innerHTML=='--' ){continue}
+            var s=e[j].childNodes
+            for(let z=0;z<s.length;z++ ){
+                if(s[z].nodeType == '3' && s[z].nodeName == '#text'){continue}
+                var value=s[z].value
+                values.push(value)
+            }
+        }
+    }
+    var qst=[eat.value,excise.value]
+    //console.log(values)
+    localStorage.setItem('Data',x)
+    localStorage.setItem('value',JSON.stringify(values))
+    localStorage.setItem('qst',qst)
+}
+//直接在dom元素后面添加HTML内容会导致dom重渲染，在尾部添加则不会。
+</script>
+</html>
+

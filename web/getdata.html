@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title> 信息录入 </title>
+    <style>
+        *{
+            -moz-user-select: none;
+            -o-user-select:none;
+            -khtml-user-select:none;
+            -webkit-user-select:none;
+            -ms-user-select:none;
+            user-select:none;
+        }
+        body{
+            margin: 0;
+            background-repeat:no-repeat;
+            background-origin: border-box;
+            background-attachment: fixed;
+            background-size:cover;
+        }
+        video {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -99;
+}
+        #box1{
+            width: 410px;
+            font-size: medium;
+            margin:  100px auto ;
+            height: 30px;
+            line-height: 30px;
+           
+        }
+        #info{
+            background-repeat:no-repeat;
+            background-origin:border-box;
+            background-size:cover;
+            background-image: url(image/运动.png);
+        }
+        #submit{color:white;background-color:rgb(170, 100, 20);}
+        input:hover{
+            background-color:rgb(204, 202, 202);
+            opacity:0.8
+        }
+     </style>
+</head>
+<body>
+    <video autoplay id="video">
+        <source  src="image/无鞘之刃-亚索-拔剑界面.mp4" style="width: 100%;" type="video/mp4"/>
+    </video>
+    <script>
+        const plays=()=>{
+            var video=document.getElementById(`video`)
+            console.log(`动画运行`)
+            video.play()
+            video.onended=()=>{
+                console.log(`动画切换`)
+                video.src=`image/无鞘之刃-亚索-登录界面.mp4`
+                video.play()
+            }
+        }
+    </script>
+        <form method="POST" action="/api/getdata" id="box1">
+            <div style="background-color:rgba(255,255,255,0.1)">
+        <fieldset id="info" style="position: relative;opacity: 1;">
+            <legend><h2>个人信息完善:</h2></legend>
+            <label for="username"> 名称: </label><input type="text" name="username" id="username" placeholder="三上悠雅" onchange="plays()"/><br>
+            <label for="sex"> 性别: </label><input type="radio" name="sex" value=1 >男<input type="radio" name="sex" value=0 checked="checked">女
+            <label for="age"> 年龄: </label><input type="number" name="age" id="age" placeholder="27" max="100" min="8"><br>
+            <label for="height"> 身高(cm): </label><input type="number" name="height" id="height" placeholder="160" max="300" min="123">
+            <label for="weight"> 体重(kg): </label><input type="number" name="weight" id="weight" placeholder="45" max="100" min="22"><br>
+
+            <div id="box2">
+                <input type="submit" name="submit" value="存档" id="submit">
+                <input type="reset" name="reset" value="重填">
+            </div>
+        
+        </fieldset>
+        </div>
+        </form>
+</body>
+</html> 

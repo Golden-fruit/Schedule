@@ -1,0 +1,103 @@
+<!DOCTYPE  HTML>
+<html >
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>跳转页面</title>
+<style type="text/css">
+    div{
+        text-align: center;
+        position: absolute;
+        top: 30%;
+        left: 44%;
+    }
+    </style>
+<script type="text/javascript">
+ var i=10,maximage=new Array();
+ for(let i=0;i<11;i++){
+    maximage[i]='image/'+i+'.jpg'
+ }
+function next(){                       /*下一张图片 */
+        if(i<10){
+            i++;
+            document.body.style.backgroundImage = "URL("+maximage[i]+")";
+            document.body.style.backgroundRepeat= "no-repeat"
+            document.body.style.backgroundSize="cover"
+            return i;
+        }
+        else{
+            document.body.style.backgroundImage = "URL("+maximage[1]+")";
+            return i=1;
+        }
+} 
+function prev(){                       /*上一张图片 */
+        if(i>1){
+            i--;
+            document.body.style.backgroundImage = "URL("+maximage[i]+")";
+            return i;
+        }
+        else{
+            document.body.style.backgroundImage = "URL("+maximage[10]+")";
+            return i=10;
+        }
+}
+var x=setInterval("next()",5000);
+function continu(){
+    clearInterval(X)
+    x=setInterval("next()",5000);
+}
+
+function colock(){
+    var time=new Date();
+    var show=time.getHours()+'时 :'+time.getMinutes()+'分 :'+time.getSeconds()+'秒';
+    document.getElementById('time').value=show;
+}
+var j=setInterval(colock,1000);
+function continu1(){
+    clearInterval(j)
+    j=setInterval(colock,1000)
+}
+
+{var t=5;                              //实现固定时间跳转
+ var k;
+ function time(){             //获取显示秒数的元素，通过定时器来更改秒数。
+     if(t>=0){
+     document.getElementById("T").value=t;
+       t=t-1;
+     k=setTimeout("time()",1000);
+    }
+    else{
+        location.assign("/");
+    }
+ }
+
+   function back(){
+    location.assign("/")
+    //   history.back(-2)
+   }
+  k= setTimeout("time()",1000);}
+</script>
+<form>
+    <input type="text" id="time" size="90"style="width:200px"/>
+    <input type="button" value="停止时间" onclick="clearInterval(j)"/>
+    <input type="button" value="停止切图" onclick="clearInterval(x)"/>
+    <input type="button" value="继续时间" onclick="continu1()"/>
+    <input type="button" value="顺序切图" onclick="continu()"/>
+</form>
+</head>
+<body style="background-image: URL(image/10.jpg);transition: 2s;background-size:cover;">
+
+    <input type="button" value="上一张背景图" onclick="prev()"/>
+    <input type="button" value="下一张背景图" onclick="next()"/>
+
+<div>
+  <h2>注册成功</h2>
+  <p><input type="text"id="T" style="width:20px"/>秒后跳转登录
+  <input type="button" onclick="back()"value="返回"id="back"></p>
+  <input type="button" id="stop" value="中断跳转"   onclick="clearTimeout(k)"/>
+</div>
+  
+ </body>
+ </html>
+
+ 
+   
